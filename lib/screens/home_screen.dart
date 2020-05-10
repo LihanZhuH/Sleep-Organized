@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sleep_organized/models/database.dart';
+import 'package:sleep_organized/screens/sleeping_screen.dart';
 import 'package:sleep_organized/widgets/alarm_tab.dart';
 import 'package:sleep_organized/widgets/profile_tab.dart';
 import 'package:sleep_organized/widgets/stats_tab.dart';
+
+import '../utils.dart';
 
 /*
   The entire home screen consisting of three tabs.
@@ -13,6 +18,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initializes notification
+    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+
+    var database = MyDatabase();
+    database.setup();
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      print('Notification payload: ' + payload);
+    }
+    await Navigator.push(context,
+      MaterialPageRoute(builder: (context) => SleepingScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [AlarmTab(), StatsTab(), ProfileTab()];
