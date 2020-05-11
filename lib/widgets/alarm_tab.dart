@@ -55,7 +55,7 @@ class _AlarmTabState extends State<AlarmTab> {
         onPressed: () {
           setState(() {
             updatePreference();
-            // Debug
+            // TODO
             Navigator.push(context, MaterialPageRoute(builder: (context) => SleepingScreen()));
 //            Navigator.pushAndRemoveUntil(context,
 //                MaterialPageRoute(builder: (context) => SleepingScreen()),

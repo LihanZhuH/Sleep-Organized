@@ -23,14 +23,14 @@ class WakeupList extends StatelessWidget {
       wakeupTime, averageWakeupTime)
       : _labelTexts = ["Duration", "Went to bed", "Woke up"],
         _firstLineTexts = [
-          "You slept for ${formatHHMMPretty((sleepDuration).round())}.",
-          "Went to bed at ${formatHHMM((goToBedTime).round())}.",
-          "Woke up at ${formatHHMM((wakeupTime).round())}.",
+          "You slept for ${formatHHMMPretty((sleepDuration).round())}",
+          "Went to bed at ${formatHHMM((goToBedTime).round())}",
+          "Woke up at ${formatHHMM((wakeupTime).round())}",
         ],
         _secondLineTexts = [
-          "Your average: ${formatHHMMPretty((averageDuration).round())}",
-          "Your average: ${formatHHMM((averageGoToBedTime).round())}",
-          "Your average: ${formatHHMM((averageWakeupTime).round())}",
+          "Your average is ${formatHHMMPretty((averageDuration).round())}",
+          "Your average is ${formatHHMM((averageGoToBedTime).round())}",
+          "Your average is ${formatHHMM((averageWakeupTime).round())}",
         ],
         _currentTimes = [
           sleepDuration, goToBedTime, wakeupTime
@@ -83,13 +83,13 @@ class WakeupList extends StatelessWidget {
             margin: EdgeInsets.all(15.0),
             width: 250.0,
             decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor.withAlpha(10),
+                color: Theme.of(context).bottomAppBarColor,
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [BoxShadow(
                   color: Colors.black26,
                   offset: Offset(0, 2),
-                  blurRadius: 1,
-                )]
+                  blurRadius: 2,
+                )],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

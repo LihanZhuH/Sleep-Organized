@@ -143,64 +143,90 @@ class _WakeUpScreen extends State<WakeUpScreen> {
   void initState() {
     super.initState();
     getDataFromPreference();
+    print("init state finished");
   }
 
   @override
   Widget build(BuildContext context) {
     Widget weatherWidget = Container(
       margin: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text("$_temp \u00b0C",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  Text(_condition,
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Text(_cityName,
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20
-                    ),
-                  ),
-                  Image(image: _weatherIconMap[_condition],),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
-          DefaultTextStyle(
+      height: 180,
+      decoration: BoxDecoration(
+          color: Theme.of(context).bottomAppBarColor,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [BoxShadow(
+            color: Colors.black26,
+            offset: Offset(0, 2),
+            blurRadius: 2,
+          )]
+      ),
+      child: Center(
+        child: (_apiError || _condition == "") ?
+          Text("Loading weather...",
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 20
-            ),
-            child: Row(
+              fontStyle: FontStyle.italic,
+              fontSize: 20,
+              color: Theme.of(context).accentColor
+            )
+          )
+          : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text("$_tempMax \u00b0C"),
-                Text("$_tempMin \u00b0C"),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("$_temp \u00b0C",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(_condition,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(_cityName,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20
+                      ),
+                    ),
+                    Image(image: _weatherIconMap[_condition] ?? _weatherIconMap["Clear"]),
+                  ],
+                ),
               ],
             ),
-          )
-        ],
-      ),
+            SizedBox(height: 20,),
+            DefaultTextStyle(
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 20
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_up, color: Colors.red, size: 30,),
+                  Text("$_tempMax \u00b0C"),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.25,),
+                  Icon(Icons.keyboard_arrow_down, color: Colors.blue, size: 30,),
+                  Text("$_tempMin \u00b0C"),
+                ],
+              ),
+            )
+          ],
+        ),
+      )
     );
 
     return Scaffold(
@@ -233,24 +259,8 @@ class _WakeUpScreen extends State<WakeUpScreen> {
                 ),
               ),
             ),
-            Container(
-              height: 1,
-              child: Container(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            _apiError ? SizedBox(height: 10,) : weatherWidget,
+            weatherWidget,
             SizedBox(height: 10,),
-//            Container(
-//              alignment: Alignment.topLeft,
-//              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-//              child: Text("Your average: " + _averageSleepText,
-//                style: TextStyle(
-//                    color: Theme.of(context).primaryColor,
-//                    fontSize: 24
-//                ),
-//              ),
-//            ),
             WakeupList(_sleepDuration, _averageSleep, _sleepGoToBed, _averageGoToBed, _sleepWakeup, _averageWakeup),
           ],
         ),
