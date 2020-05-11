@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:location/location.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleep_organized/screens/home_screen.dart';
@@ -33,7 +34,7 @@ class _SleepingScreenState extends State<SleepingScreen> {
     scheduleNotification(timeLeft);
     print(timeLeft);
     CountdownTimer countdownTimer =
-    CountdownTimer(Duration(milliseconds: timeLeft), Duration(seconds: 1));
+    CountdownTimer(Duration(milliseconds: 2), Duration(seconds: 1));
     _sub = countdownTimer.listen(null);
     _sub.onData((duration) {
       timeLeft -= 1000;
@@ -50,6 +51,10 @@ class _SleepingScreenState extends State<SleepingScreen> {
           MaterialPageRoute(builder: (context) => WakeUpScreen()),
               (Route<dynamic> route) => false);
     });
+//    // TODO: delete
+//    Navigator.pushAndRemoveUntil(context,
+//        MaterialPageRoute(builder: (context) => WakeUpScreen()),
+//            (Route<dynamic> route) => false);
   }
 
   void onTimerTick(int newTimestamp) {

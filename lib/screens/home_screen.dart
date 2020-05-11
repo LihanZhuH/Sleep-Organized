@@ -57,11 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Theme.of(context).primaryColor
           ),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).bottomAppBarColor,
         brightness: Brightness.dark,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).bottomAppBarColor,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Theme.of(context).accentColor,
         currentIndex: _selectedIndex,
