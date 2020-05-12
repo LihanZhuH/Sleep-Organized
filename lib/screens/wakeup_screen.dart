@@ -9,6 +9,7 @@ import 'package:sleep_organized/models/database.dart';
 import 'package:sleep_organized/models/sleep.dart';
 import 'package:sleep_organized/screens/home_screen.dart';
 import 'package:sleep_organized/utils.dart';
+import 'package:sleep_organized/widgets/uniform_box_decoration.dart';
 import 'package:sleep_organized/widgets/wakeup_list.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -30,21 +31,21 @@ class _WakeUpScreen extends State<WakeUpScreen> {
   int _temp = 0, _tempMin = 0, _tempMax = 0;
 
   final Map<String, AssetImage> _weatherIconMap = {
-    "Clouds" : AssetImage("assets/weather-icons/icons8-clouds-48.png"),
-    "Clear" : AssetImage("assets/weather-icons/icons8-sun-48.png"),
-    "Snow" : AssetImage("assets/weather-icons/icons8-snow-48.png"),
-    "Rain" : AssetImage("assets/weather-icons/icons8-heavy-rain-48.png"),
-    "Drizzle" : AssetImage("assets/weather-icons/icons8-heavy-rain-48.png"),
-    "Thunderstorm" : AssetImage("assets/weather-icons/icons8-storm-48.png"),
-    "Mist" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Smoke" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Haze" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Dust" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Fog" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Sand" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Ash" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Squall" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
-    "Tornado" : AssetImage("assets/weather-icons/icons8-dust-48.png"),
+    "Clouds" : AssetImage("assets/weather-icons/icons8-clouds-96.png"),
+    "Clear" : AssetImage("assets/weather-icons/icons8-sun-96.png"),
+    "Snow" : AssetImage("assets/weather-icons/icons8-snow-96.png"),
+    "Rain" : AssetImage("assets/weather-icons/icons8-heavy-rain-96.png"),
+    "Drizzle" : AssetImage("assets/weather-icons/icons8-heavy-rain-96.png"),
+    "Thunderstorm" : AssetImage("assets/weather-icons/icons8-storm-96.png"),
+    "Mist" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Smoke" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Haze" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Dust" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Fog" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Sand" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Ash" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Squall" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
+    "Tornado" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
   };
 
   void getDataFromPreference() async {
@@ -149,17 +150,10 @@ class _WakeUpScreen extends State<WakeUpScreen> {
   @override
   Widget build(BuildContext context) {
     Widget weatherWidget = Container(
-      margin: EdgeInsets.all(10),
-      height: 180,
-      decoration: BoxDecoration(
-          color: Theme.of(context).bottomAppBarColor,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [BoxShadow(
-            color: Colors.black26,
-            offset: Offset(0, 2),
-            blurRadius: 2,
-          )]
-      ),
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(5),
+      height: 200,
+      decoration: getUniformBoxDecoration(Theme.of(context).bottomAppBarColor),
       child: Center(
         child: (_apiError || _condition == "") ?
           Text("Loading weather...",
@@ -178,6 +172,14 @@ class _WakeUpScreen extends State<WakeUpScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    Text(_cityName,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 25,
+                          letterSpacing: 0.5
+                      ),
+                    ),
+                    SizedBox(height: 10,),
                     Text("$_temp \u00b0C",
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
@@ -185,24 +187,28 @@ class _WakeUpScreen extends State<WakeUpScreen> {
                         fontWeight: FontWeight.bold
                       ),
                     ),
-                    Text(_condition,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
+
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    Text(_cityName,
+                    Text(_condition,
                       style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 20
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 25,
                       ),
                     ),
-                    Image(image: _weatherIconMap[_condition] ?? _weatherIconMap["Clear"]),
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: _weatherIconMap[_condition] ?? _weatherIconMap["Clear"],
+                          fit: BoxFit.fill,
+                        )
+                      ),
+                    )
+//                    Image(image: ),
                   ],
                 ),
               ],

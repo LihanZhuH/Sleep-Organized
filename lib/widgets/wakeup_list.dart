@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:sleep_organized/utils.dart';
+import 'package:sleep_organized/widgets/uniform_box_decoration.dart';
 
 /*
   Scrollable stats when user wakeup.
@@ -82,15 +83,7 @@ class WakeupList extends StatelessWidget {
           return Container(
             margin: EdgeInsets.all(15.0),
             width: 250.0,
-            decoration: BoxDecoration(
-                color: Theme.of(context).bottomAppBarColor,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(0, 2),
-                  blurRadius: 2,
-                )],
-            ),
+            decoration: getUniformBoxDecoration(Theme.of(context).bottomAppBarColor),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
