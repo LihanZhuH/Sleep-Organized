@@ -59,7 +59,8 @@ class _WakeUpScreen extends State<WakeUpScreen> {
       _sleepGoToBed = TimeUtils.millisecToLocalSec(sleepTime);
       _sleepWakeup =  TimeUtils.millisecToLocalSec(wakeupTime);
     });
-    var database = MyDatabase();
+    var database = MyDatabase.instance;
+    var db = await database.database;
     var allSleeps = await database.sleeps();
     int nextId = allSleeps.length;
     int totalDuration = 0;
@@ -187,7 +188,6 @@ class _WakeUpScreen extends State<WakeUpScreen> {
                         fontWeight: FontWeight.bold
                       ),
                     ),
-
                   ],
                 ),
                 Column(

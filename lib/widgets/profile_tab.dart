@@ -11,6 +11,9 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
-    return Text("test");
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Container(),
+    );
   }
 }

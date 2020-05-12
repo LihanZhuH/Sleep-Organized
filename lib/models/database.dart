@@ -6,18 +6,22 @@ import 'package:sqflite/sqflite.dart';
   Singleton for database access.
  */
 class MyDatabase {
-  static final MyDatabase _instance = MyDatabase._internal();
+  // make this a singleton class
+  MyDatabase._privateConstructor();
+  static final MyDatabase instance = MyDatabase._privateConstructor();
 
-  Database _database;
-
-  factory MyDatabase() {
-    return _instance;
+  // only have a single app-wide reference to the database
+  static Database _database;
+  Future<Database> get database async {
+    if (_database != null) return _database;
+    // lazily instantiate the db the first time it is accessed
+    _database = await _initDatabase();
+    return _database;
   }
 
-  MyDatabase._internal();
-
-  Future<void> setup() async {
-    _database = await openDatabase(
+  // this opens the database (and creates it if it doesn't exist)
+  _initDatabase() async {
+    return await openDatabase(
       join(await getDatabasesPath(), 'sleeps_database.db'),
       onCreate: (db, version) {
         // Run the CREATE TABLE statement on the database.
@@ -39,6 +43,23 @@ class MyDatabase {
 
   Future<List<Sleep>> sleeps() async {
     final List<Map<String, dynamic>> maps = await _database.query('sleeps');
+
+    return List.generate(maps.length, (i) {
+      return Sleep(
+        id: maps[i]['id'],
+        start: maps[i]['start'],
+        end: maps[i]['end'],
+      );
+    });
+  }
+
+  Future<List<Sleep>> sleepsThisWeek() async {
+    int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
+    int weekLength = 1000 * 60 * 60 * 24 * 7;
+//    String whereString = "$currentTimestamp - start < $weekLength";
+    final List<Map<String, dynamic>> maps = await _database.rawQuery(
+      "SELECT * FROM 'sleeps' WHERE $currentTimestamp - start < $weekLength"
+    );
 
     return List.generate(maps.length, (i) {
       return Sleep(

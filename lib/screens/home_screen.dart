@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sleep_organized/models/database.dart';
+import 'package:sleep_organized/models/sleep.dart';
 import 'package:sleep_organized/screens/sleeping_screen.dart';
 import 'package:sleep_organized/widgets/alarm_tab.dart';
 import 'package:sleep_organized/widgets/profile_tab.dart';
@@ -31,9 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+    
+    // TODO: delete
+    createFakeDatabase();
+  }
 
-    var database = MyDatabase();
-    database.setup();
+  void createFakeDatabase() async {
+    var database = MyDatabase.instance;
+    var db = await database.database;
+    database.insertSleep(Sleep(id: 0, start: 1589172747000, end: 1589205147000));
+    database.insertSleep(Sleep(id: 1, start: 1588920747000, end: 1588950747000));
   }
 
   Future onSelectNotification(String payload) async {
@@ -54,7 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(titles[_selectedIndex],
           style: TextStyle(
-            color: Theme.of(context).primaryColor
+            color: Theme.of(context).primaryColor,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
           ),
         ),
         backgroundColor: Theme.of(context).bottomAppBarColor,
