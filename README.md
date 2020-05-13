@@ -1,16 +1,13 @@
-# sleep_organized
+# Sleep Organized
 
-A sleep-tracker app.
+A sleep-tracker app built using Flutter. The duration and time period of each sleep is stored locally and can be later used for statistics.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
+| Alarm | Statistics | Profile |
+|:----:|:----:|:----:|
+| ![alarm tab](screenshots/alarm.png)| ![stats tab](screenshots/stats.png) | ![profile tab](screenshots/profile.png) |
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Sleeping | Wake up 1 | wake up 2 |
+|:----:|:----:|:----:|
+| ![sleeping](screenshots/sleeping.png)| ![wake up 1](screenshots/wakeup1.png) | ![wake up 2](screenshots/wakeup2.png) |
