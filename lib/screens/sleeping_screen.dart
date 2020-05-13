@@ -49,7 +49,7 @@ class _SleepingScreenState extends State<SleepingScreen> {
       print("Done.");
       _sub.cancel();
       // Transition to wake up page.
-      Navigator.pushAndRemoveUntil(
+      Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
@@ -60,14 +60,34 @@ class _SleepingScreenState extends State<SleepingScreen> {
               var end = Offset.zero;
               var curve = Curves.ease;
               var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
               return SlideTransition(
                 position: animation.drive(tween),
                 child: child,
               );
             },
-          ),
-          (Route<dynamic> route) => false);
+          )
+      );
+
+//      Navigator.pushAndRemoveUntil(
+//          context,
+//          PageRouteBuilder(
+//            pageBuilder: (context, animation, secondaryAnimation) =>
+//                WakeUpScreen(),
+//            transitionsBuilder:
+//                (context, animation, secondaryAnimation, child) {
+//              var begin = Offset(0.0, 1.0);
+//              var end = Offset.zero;
+//              var curve = Curves.ease;
+//              var tween =
+//                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//              return SlideTransition(
+//                position: animation.drive(tween),
+//                child: child,
+//              );
+//            },
+//          ),
+//          (Route<dynamic> route) => false);
     });
   }
 
@@ -117,25 +137,29 @@ class _SleepingScreenState extends State<SleepingScreen> {
           setState(() {
             // Removes previously scheduled notification.
             flutterLocalNotificationsPlugin.cancelAll();
-            Navigator.pushAndRemoveUntil(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      HomeScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    var begin = Offset(0.0, -1.0);
-                    var end = Offset.zero;
-                    var curve = Curves.ease;
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-                (Route<dynamic> route) => false);
+
+            Navigator.pop(context);
+
+            // TODO: back
+//            Navigator.pushAndRemoveUntil(
+//                context,
+//                PageRouteBuilder(
+//                  pageBuilder: (context, animation, secondaryAnimation) =>
+//                      HomeScreen(),
+//                  transitionsBuilder:
+//                      (context, animation, secondaryAnimation, child) {
+//                    var begin = Offset(0.0, -1.0);
+//                    var end = Offset.zero;
+//                    var curve = Curves.ease;
+//                    var tween = Tween(begin: begin, end: end)
+//                        .chain(CurveTween(curve: curve));
+//                    return SlideTransition(
+//                      position: animation.drive(tween),
+//                      child: child,
+//                    );
+//                  },
+//                ),
+//                (Route<dynamic> route) => false);
           });
         },
         child: Text("Cancel",

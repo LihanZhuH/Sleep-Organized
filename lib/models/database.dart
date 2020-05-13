@@ -50,7 +50,9 @@ class MyDatabase {
   Future<List<Sleep>> sleeps() async {
     final List<Map<String, dynamic>> maps = await _database.query('sleeps');
 
+    print("Gettting all sleeps...");
     return List.generate(maps.length, (i) {
+      print("Sleep ${maps[i]['id']}: ${maps[i]['start']}");
       return Sleep(
         id: maps[i]['id'],
         start: maps[i]['start'],

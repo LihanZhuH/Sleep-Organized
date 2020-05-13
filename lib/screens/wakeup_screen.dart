@@ -71,7 +71,17 @@ class _WakeUpScreen extends State<WakeUpScreen> {
     int totalGoToBed = 0;
     int totalWakeup = 0;
 
-    await database.insertSleep(Sleep(id: nextId, start: sleepTime, end: wakeupTime));
+    // Inserts only when there's no repeated entry. TODO: bugs
+    bool hasRepeat = false;
+    for (var sleep in allSleeps) {
+      if (sleep.start == sleepTime && sleep.end == wakeupTime) {
+        hasRepeat = true;
+        break;
+      }
+    }
+    if (!hasRepeat) {
+      await database.insertSleep(Sleep(id: nextId, start: sleepTime, end: wakeupTime));
+    }
 
     if (allSleeps.length > 0) {
       for (var sleep in allSleeps) {
@@ -248,22 +258,23 @@ class _WakeUpScreen extends State<WakeUpScreen> {
           icon: Icon(Icons.clear),
           color: Theme.of(context).primaryColor,
           onPressed: () {
-            Navigator.pushAndRemoveUntil(context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    var begin = Offset(0.0, -1.0);
-                    var end = Offset.zero;
-                    var curve = Curves.ease;
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-                    (Route<dynamic> route) => false
-            );
+            Navigator.of(context).popUntil((route) => route.isFirst);
+//            Navigator.pushAndRemoveUntil(context,
+//                PageRouteBuilder(
+//                  pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+//                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//                    var begin = Offset(0.0, -1.0);
+//                    var end = Offset.zero;
+//                    var curve = Curves.ease;
+//                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//                    return SlideTransition(
+//                      position: animation.drive(tween),
+//                      child: child,
+//                    );
+//                  },
+//                ),
+//                    (Route<dynamic> route) => false
+//            );
           },
         ),
         backgroundColor: Theme.of(context).bottomAppBarColor,

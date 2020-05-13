@@ -25,6 +25,7 @@ class _ProfileTabState extends State<ProfileTab> {
       totalDuration += element.duration;
     });
     double average = totalDuration / allSleeps.length.toDouble();
+    print(allSleeps);
     setState(() {
       _nightsText = "${allSleeps.length}";
       _averageText = formatHHMMPretty((average / 1000).round());
