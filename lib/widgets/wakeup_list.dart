@@ -7,8 +7,6 @@ import 'package:sleep_organized/widgets/uniform_box_decoration.dart';
   Scrollable stats when user wakeup.
  */
 class WakeupList extends StatelessWidget {
-//  final int sleepDuration, averageSleep;
-//  final int goToBedTime, averageGoToBedTime, wakeupTime, averageWakeupTime;
   final List<GlobalKey<AnimatedCircularChartState>> _chartKeys =
       [GlobalKey<AnimatedCircularChartState>(),
         GlobalKey<AnimatedCircularChartState>(),
@@ -18,6 +16,9 @@ class WakeupList extends StatelessWidget {
   final List<String> _secondLineTexts;
   final List<int> _currentTimes, _averageTimes;
 
+  /*
+    Constructor.
+   */
   WakeupList(
       int sleepDuration, averageDuration,
       goToBedTime, averageGoToBedTime,
@@ -40,6 +41,9 @@ class WakeupList extends StatelessWidget {
           averageDuration, averageGoToBedTime, averageWakeupTime
         ];
 
+  /*
+    Returns a chart with given inputs.
+   */
   Widget customAnimatedChart(int i, first, second, String label) {
     return AnimatedCircularChart(
       key: _chartKeys[i],

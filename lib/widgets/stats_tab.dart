@@ -72,6 +72,7 @@ class _StatsTabState extends State<StatsTab> {
 
   @override
   Widget build(BuildContext context) {
+    // Diagram for duration.
     final Widget durationWidget = Container(
       width: MediaQuery.of(context).size.width * 0.9,
       padding: EdgeInsets.all(15),
@@ -135,6 +136,7 @@ class _StatsTabState extends State<StatsTab> {
       ),
     );
 
+    // Diagram for periods.
     final Widget periodWidget = Container(
       width: MediaQuery.of(context).size.width * 0.9,
       padding: EdgeInsets.all(15),

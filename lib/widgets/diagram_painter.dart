@@ -30,7 +30,7 @@ class MyBoxPainter extends CustomPainter {
 }
 
 /*
-  Bars used in durations.
+  Bars used in histograms.
  */
 class MyBarPainter extends CustomPainter {
   final Color _color;

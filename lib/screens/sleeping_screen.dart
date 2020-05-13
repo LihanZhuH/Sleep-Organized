@@ -25,7 +25,8 @@ class _SleepingScreenState extends State<SleepingScreen> {
   void setUp() async {
     // Setup preference
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _alarmTimestamp = prefs.getInt("alarm") ?? DateTime.now().millisecondsSinceEpoch;
+    _alarmTimestamp =
+        prefs.getInt("alarm") ?? DateTime.now().millisecondsSinceEpoch;
     _soundName = prefs.getString("sound") ?? "Analog watch";
 
     // Setup timer
@@ -35,7 +36,7 @@ class _SleepingScreenState extends State<SleepingScreen> {
     scheduleNotification(timeLeft);
     print(timeLeft);
     CountdownTimer countdownTimer =
-    CountdownTimer(Duration(milliseconds: timeLeft), Duration(seconds: 1));
+        CountdownTimer(Duration(milliseconds: timeLeft), Duration(seconds: 1));
     _sub = countdownTimer.listen(null);
     _sub.onData((duration) {
       timeLeft -= 1000;
@@ -46,47 +47,53 @@ class _SleepingScreenState extends State<SleepingScreen> {
 
     _sub.onDone(() {
       print("Done.");
-      // TODO: fires alarm and screen transition
       _sub.cancel();
-      Navigator.pushAndRemoveUntil(context,
+      // Transition to wake up page.
+      Navigator.pushAndRemoveUntil(
+          context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => WakeUpScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                WakeUpScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               var begin = Offset(0.0, 1.0);
               var end = Offset.zero;
               var curve = Curves.ease;
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
               return SlideTransition(
                 position: animation.drive(tween),
                 child: child,
               );
             },
           ),
-              (Route<dynamic> route) => false
-      );
+          (Route<dynamic> route) => false);
     });
   }
 
+  /*
+    Called each second.
+   */
   void onTimerTick(int newTimestamp) {
     setState(() {
       _timeLeft = newTimestamp;
     });
   }
 
+  /*
+    Schedules a notification timeLeft in the future.
+   */
   void scheduleNotification(int timeLeft) {
     var scheduledNotificationDateTime =
         DateTime.now().add(Duration(milliseconds: timeLeft));
-    var androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('Unique id',
-        'channel name', 'channel description');
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'Unique id', 'channel name', 'channel description');
     var iOSPlatformChannelSpecifics =
-    IOSNotificationDetails(sound: alarmMap[_soundName]);  // TODO: test
+        IOSNotificationDetails(sound: alarmMap[_soundName]); // TODO: test
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    flutterLocalNotificationsPlugin.schedule(
-        0, "Alarm", "Wake up!",
-        scheduledNotificationDateTime,
-        platformChannelSpecifics);
+    flutterLocalNotificationsPlugin.schedule(0, "Alarm", "Wake up!",
+        scheduledNotificationDateTime, platformChannelSpecifics);
   }
 
   @override
@@ -108,33 +115,36 @@ class _SleepingScreenState extends State<SleepingScreen> {
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           setState(() {
-            // TODO: erase entry
+            // Removes previously scheduled notification.
             flutterLocalNotificationsPlugin.cancelAll();
-            Navigator.pushAndRemoveUntil(context,
+            Navigator.pushAndRemoveUntil(
+                context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HomeScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     var begin = Offset(0.0, -1.0);
                     var end = Offset.zero;
                     var curve = Curves.ease;
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
                     return SlideTransition(
                       position: animation.drive(tween),
                       child: child,
                     );
                   },
                 ),
-                    (Route<dynamic> route) => false
-            );
+                (Route<dynamic> route) => false);
           });
         },
         child: Text("Cancel",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            )
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          )
         ),
       ),
     );
@@ -144,22 +154,30 @@ class _SleepingScreenState extends State<SleepingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Time until wake up:",
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 30
-              ),
+            Text(
+              "Time until wake up:",
+              style:
+                  TextStyle(color: Theme.of(context).primaryColor, fontSize: 30),
             ),
-            SizedBox(height: 20,),
-            Text(formatHHMMSS((_timeLeft/1000).round()),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              formatHHMMSS((_timeLeft / 1000).round()),
               style: TextStyle(
-                color: Color.fromARGB(255, (120 * cos(_timeLeft/1000)).round() + 126, 130, (120 * sin(_timeLeft/1000)).round() + 126),
+                color: Color.fromARGB(
+                    255,
+                    (120 * cos(_timeLeft / 1000)).round() + 126,
+                    130,
+                    (120 * sin(_timeLeft / 1000)).round() + 126),
                 fontSize: 50,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.8,
               ),
             ),
-            SizedBox(height: 60,),
+            SizedBox(
+              height: 60,
+            ),
             _cancelButton,
           ],
         )

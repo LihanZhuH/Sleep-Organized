@@ -20,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
@@ -41,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sound: true,
     );
     
-    // TODO: delete
+    // TODO: remove when release
     setUpFakeDatabase();
   }
 

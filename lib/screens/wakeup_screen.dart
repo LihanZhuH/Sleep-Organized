@@ -24,10 +24,13 @@ class _WakeUpScreen extends State<WakeUpScreen> {
   String _sleepDurationText, _averageSleepText = "";
   int _sleepDuration = 0, _sleepGoToBed = 0, _sleepWakeup = 0;
   int _averageSleep = 0, _averageGoToBed = 0, _averageWakeup = 0;
+
+  // API related data
   bool _apiError = false;
   String _cityName = "", _units = "metric", _condition = "";
   int _temp = 0, _tempMin = 0, _tempMax = 0;
 
+  // A map from all conditions to icons
   final Map<String, AssetImage> _weatherIconMap = {
     "Clouds" : AssetImage("assets/weather-icons/icons8-clouds-96.png"),
     "Clear" : AssetImage("assets/weather-icons/icons8-sun-96.png"),
@@ -46,7 +49,8 @@ class _WakeUpScreen extends State<WakeUpScreen> {
     "Tornado" : AssetImage("assets/weather-icons/icons8-dust-96.png"),
   };
 
-  void getDataFromPreference() async {
+  void getDataFromPreferenceAndDatabase() async {
+    // From preference
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int sleepTime = prefs.getInt("sleepTime");
     int wakeupTime = prefs.getInt("alarm");
@@ -57,6 +61,8 @@ class _WakeUpScreen extends State<WakeUpScreen> {
       _sleepGoToBed = TimeUtils.millisecToLocalSec(sleepTime);
       _sleepWakeup =  TimeUtils.millisecToLocalSec(wakeupTime);
     });
+
+    // From database
     var database = MyDatabase.instance;
     var db = await database.database;
     var allSleeps = await database.sleeps();
@@ -84,7 +90,7 @@ class _WakeUpScreen extends State<WakeUpScreen> {
       });
     }
 
-    // Location
+    // Gets location
     Location location = Location();
 
     bool serviceEnabled;
@@ -116,6 +122,9 @@ class _WakeUpScreen extends State<WakeUpScreen> {
     print("Done fetching");
   }
 
+  /*
+    Makes API call to get weather data.
+   */
   Future<void> fetchWeather(double lat, double lon) async {
     final response = await http.get("https://api.openweathermap.org/data/2.5/weather?lat=${lat.round()}&lon=${lon.round()}&appid=$apiKey&units=$_units");
 
@@ -142,12 +151,13 @@ class _WakeUpScreen extends State<WakeUpScreen> {
   @override
   void initState() {
     super.initState();
-    getDataFromPreference();
+    getDataFromPreferenceAndDatabase();
     print("init state finished");
   }
 
   @override
   Widget build(BuildContext context) {
+    // The entire widget displaying weather
     Widget weatherWidget = Container(
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(5),
@@ -206,7 +216,6 @@ class _WakeUpScreen extends State<WakeUpScreen> {
                         )
                       ),
                     )
-//                    Image(image: ),
                   ],
                 ),
               ],

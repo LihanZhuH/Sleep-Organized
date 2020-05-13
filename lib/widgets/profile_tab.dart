@@ -52,6 +52,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   @override
   Widget build(BuildContext context) {
+    // The widget for user history overview.
     final Widget overviewWidget = Container(
       width: MediaQuery.of(context).size.width * 0.9,
       height: 100.0,
@@ -117,6 +118,7 @@ class _ProfileTabState extends State<ProfileTab> {
       ),
     );
 
+    // The widget for alarm sound selection.
     final Widget soundSelectorWidget = Container(
       width: MediaQuery.of(context).size.width * 0.9,
       height: 80.0,

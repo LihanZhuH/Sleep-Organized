@@ -10,7 +10,7 @@ class MyDatabase {
   MyDatabase._privateConstructor();
   static final MyDatabase instance = MyDatabase._privateConstructor();
 
-  // only have a single app-wide reference to the database
+  // A single app-wide reference to the database
   static Database _database;
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -19,7 +19,7 @@ class MyDatabase {
     return _database;
   }
 
-  // this opens the database (and creates it if it doesn't exist)
+  // Opens the database (and creates it if it doesn't exist)
   _initDatabase() async {
     return await openDatabase(
       join(await getDatabasesPath(), 'sleeps_database.db'),
@@ -33,6 +33,9 @@ class MyDatabase {
     );
   }
 
+  /*
+    Inserts one sleep object.
+   */
   Future<void> insertSleep(Sleep sleep) async {
     await _database.insert(
       'sleeps',
@@ -41,6 +44,9 @@ class MyDatabase {
     );
   }
 
+  /*
+    Gets all sleeps.
+   */
   Future<List<Sleep>> sleeps() async {
     final List<Map<String, dynamic>> maps = await _database.query('sleeps');
 
@@ -53,10 +59,12 @@ class MyDatabase {
     });
   }
 
+  /*
+    Gets all sleeps within a week.
+   */
   Future<List<Sleep>> sleepsThisWeek() async {
     int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
     int weekLength = 1000 * 60 * 60 * 24 * 7;
-//    String whereString = "$currentTimestamp - start < $weekLength";
     final List<Map<String, dynamic>> maps = await _database.rawQuery(
       "SELECT * FROM 'sleeps' WHERE $currentTimestamp - start < $weekLength"
     );

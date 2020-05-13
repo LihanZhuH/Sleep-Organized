@@ -47,7 +47,6 @@ class _AlarmTabState extends State<AlarmTab> {
         onPressed: () {
           setState(() {
             updatePreference();
-            // TODO
 //            Navigator.push(context, MaterialPageRoute(builder: (context) => SleepingScreen()));
             Navigator.pushAndRemoveUntil(context,
                 PageRouteBuilder(
@@ -78,19 +77,10 @@ class _AlarmTabState extends State<AlarmTab> {
       ),
     );
 
+    // The data picker
     final _datePicker = Container(
         height: 160,
         width: 200,
-//        foregroundDecoration: BoxDecoration(
-//          border: Border.all(
-//              color: Theme.of(context).primaryColor,
-//              width: 1
-//          ),
-//          borderRadius: BorderRadius.circular(15.0),
-//        ),
-//        decoration: BoxDecoration(
-//          borderRadius: BorderRadius.circular(15.0),
-//        ),
         child: CupertinoDatePicker(
           mode: CupertinoDatePickerMode.time,
           use24hFormat: true,
