@@ -1,13 +1,21 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-import 'package:sleep_organized/widgets/profile_tab.dart';
 
 // Global notification plugin.
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+// Alarm sounds
+Map<String, String> alarmMap = {
+  "Analog watch" : "analog-watch-sound.caf",
+  "School bell" : "old-fashioned-school-bell-sound.caf",
+  "Alien" : "alien-sound.caf",
+};
+
+List<String> alarmNames = ["Analog watch", "School bell", "Alien"];
+
 /*
-    Converts from second to hour-minute-second.
-   */
+  Converts from second to hour-minute-second.
+ */
 String formatHHMMSS(int seconds) {
   int hours = (seconds / 3600).truncate();
   seconds = (seconds % 3600).truncate();

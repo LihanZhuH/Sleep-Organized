@@ -32,12 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
     
     // TODO: delete
-    createFakeDatabase();
+    setUpFakeDatabase();
   }
 
-  void createFakeDatabase() async {
+  void setUpFakeDatabase() async {
     var database = MyDatabase.instance;
     var db = await database.database;
     database.insertSleep(Sleep(id: 0, start: 1589172747000, end: 1589205147000));
@@ -64,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 25,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             letterSpacing: 1.2,
           ),
         ),

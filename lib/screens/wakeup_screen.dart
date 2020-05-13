@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:charcode/html_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleep_organized/config.dart';
 import 'package:sleep_organized/models/database.dart';
@@ -242,8 +240,21 @@ class _WakeUpScreen extends State<WakeUpScreen> {
           color: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                    (Route<dynamic> route) => false);
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    var begin = Offset(0.0, -1.0);
+                    var end = Offset.zero;
+                    var curve = Curves.ease;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+                    (Route<dynamic> route) => false
+            );
           },
         ),
         backgroundColor: Theme.of(context).bottomAppBarColor,

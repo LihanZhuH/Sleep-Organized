@@ -39,15 +39,7 @@ class _AlarmTabState extends State<AlarmTab> {
     final _startButton = Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.orangeAccent,
-            Colors.orange,
-            Colors.deepOrange,
-          ]
-        )
+        color: Colors.teal,
       ),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width * 0.37,
@@ -56,10 +48,23 @@ class _AlarmTabState extends State<AlarmTab> {
           setState(() {
             updatePreference();
             // TODO
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SleepingScreen()));
-//            Navigator.pushAndRemoveUntil(context,
-//                MaterialPageRoute(builder: (context) => SleepingScreen()),
-//                (Route<dynamic> route) => false);
+//            Navigator.push(context, MaterialPageRoute(builder: (context) => SleepingScreen()));
+            Navigator.pushAndRemoveUntil(context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => SleepingScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(0.0, 1.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                ),
+                (Route<dynamic> route) => false
+            );
           });
         },
         child: Text("Start",
@@ -74,18 +79,18 @@ class _AlarmTabState extends State<AlarmTab> {
     );
 
     final _datePicker = Container(
-        height: 140,
+        height: 160,
         width: 200,
-        foregroundDecoration: BoxDecoration(
-          border: Border.all(
-              color: Theme.of(context).primaryColor,
-              width: 8
-          ),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
+//        foregroundDecoration: BoxDecoration(
+//          border: Border.all(
+//              color: Theme.of(context).primaryColor,
+//              width: 1
+//          ),
+//          borderRadius: BorderRadius.circular(15.0),
+//        ),
+//        decoration: BoxDecoration(
+//          borderRadius: BorderRadius.circular(15.0),
+//        ),
         child: CupertinoDatePicker(
           mode: CupertinoDatePickerMode.time,
           use24hFormat: true,
@@ -101,7 +106,7 @@ class _AlarmTabState extends State<AlarmTab> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _datePicker,
-          SizedBox(height: 30,),
+          SizedBox(height: 50,),
           _startButton,
         ],
       ),

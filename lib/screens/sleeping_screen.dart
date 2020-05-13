@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:location/location.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleep_organized/screens/home_screen.dart';
@@ -19,13 +19,14 @@ class SleepingScreen extends StatefulWidget {
 
 class _SleepingScreenState extends State<SleepingScreen> {
   int _alarmTimestamp, _timeLeft;
-  String _displayText = "00.00";
+  String _soundName = "Analog watch";
   StreamSubscription _sub;
 
   void setUp() async {
     // Setup preference
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _alarmTimestamp = prefs.getInt("alarm") ?? DateTime.now().millisecondsSinceEpoch;
+    _soundName = prefs.getString("sound") ?? "Analog watch";
 
     // Setup timer
     int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -34,7 +35,7 @@ class _SleepingScreenState extends State<SleepingScreen> {
     scheduleNotification(timeLeft);
     print(timeLeft);
     CountdownTimer countdownTimer =
-    CountdownTimer(Duration(milliseconds: 2), Duration(seconds: 1));
+    CountdownTimer(Duration(milliseconds: timeLeft), Duration(seconds: 1));
     _sub = countdownTimer.listen(null);
     _sub.onData((duration) {
       timeLeft -= 1000;
@@ -48,13 +49,22 @@ class _SleepingScreenState extends State<SleepingScreen> {
       // TODO: fires alarm and screen transition
       _sub.cancel();
       Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => WakeUpScreen()),
-              (Route<dynamic> route) => false);
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => WakeUpScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+              (Route<dynamic> route) => false
+      );
     });
-//    // TODO: delete
-//    Navigator.pushAndRemoveUntil(context,
-//        MaterialPageRoute(builder: (context) => WakeUpScreen()),
-//            (Route<dynamic> route) => false);
   }
 
   void onTimerTick(int newTimestamp) {
@@ -70,7 +80,7 @@ class _SleepingScreenState extends State<SleepingScreen> {
     AndroidNotificationDetails('Unique id',
         'channel name', 'channel description');
     var iOSPlatformChannelSpecifics =
-    IOSNotificationDetails();
+    IOSNotificationDetails(sound: alarmMap[_soundName]);  // TODO: test
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     flutterLocalNotificationsPlugin.schedule(
@@ -90,16 +100,8 @@ class _SleepingScreenState extends State<SleepingScreen> {
   Widget build(BuildContext context) {
     final _cancelButton = Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.orangeAccent,
-                Colors.orange,
-                Colors.deepOrange,
-              ]
-          )
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.teal,
       ),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width * 0.37,
@@ -107,9 +109,23 @@ class _SleepingScreenState extends State<SleepingScreen> {
         onPressed: () {
           setState(() {
             // TODO: erase entry
+            flutterLocalNotificationsPlugin.cancelAll();
             Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                (Route<dynamic> route) => false);
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    var begin = Offset(0.0, -1.0);
+                    var end = Offset.zero;
+                    var curve = Curves.ease;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+                    (Route<dynamic> route) => false
+            );
           });
         },
         child: Text("Cancel",
@@ -137,8 +153,10 @@ class _SleepingScreenState extends State<SleepingScreen> {
             SizedBox(height: 20,),
             Text(formatHHMMSS((_timeLeft/1000).round()),
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 35
+                color: Color.fromARGB(255, (120 * cos(_timeLeft/1000)).round() + 126, 130, (120 * sin(_timeLeft/1000)).round() + 126),
+                fontSize: 50,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.8,
               ),
             ),
             SizedBox(height: 60,),
